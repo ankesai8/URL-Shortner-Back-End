@@ -55,7 +55,7 @@ async function connection() {
 
 //running server
   app.listen(Port, () => {
-    console.log("Server started at " + Port);
+   console.log(`Server is stated on http://localhost:${Port}`);
   });
 }
 
