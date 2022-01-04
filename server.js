@@ -1,42 +1,49 @@
-require("dotenv").config();
 const express = require("express");
-const db = require("./mongo");
 const app = express();
+
+require("dotenv").config();
 const cors = require("cors");
-const Port = process.env.PORT || 5000;
-const userRoutes = require("./user_routes");
 const jwt = require("jsonwebtoken");
+
+const db = require("./mongo");
+const userRoutes = require("./user_routes");
 const service = require("./modules/reset_service");
 
-async function() {
+const Port = process.env.PORT || 5000;
+
+async function connect() {
 //connecting to database
   await db.connect();
 
-//converting json data to stringify
   app.use(express.json());
   app.use(cors());
 
-//user route for registeration and login
+//user route for register login
   app.use("/user", userRoutes);
 
-//get all the created urls list
-  app.get("/allUrls", async (req, res) => { const all = await db.url.find().toArray();
+//get all urls
+
+  app.get("/urls", async (req, res) => {
+    const all = await db.url.find().toArray();
     res.send(all);
   });
 
-//route for resetting the password
+//route for reset the password
   app.post("/reset", service.resets);
 
 //Route for setting new password
   app.post("/new_password", service.newpassword);
 
 //middleware calling with the provided login token
-  app.use((req, res, next) => { const token = req.headers["auth-token"];
+  app.use((req, res, next) => {
+    const token = req.headers["auth-token"];
     if (token) {
-           req.user = jwt.verify(token, "admin123");
-           console.log(req.user);
-           next();} 
- else { res.sendStatus(401); }
+        req.user = jwt.verify(token, "admin123");
+        console.log(req.user);
+        next();
+  } 
+  else {res.sendStatus(401); }
+
   });
 
 //route for generating a new url
@@ -45,8 +52,9 @@ async function() {
 //route for redirecting from short url to long url
   app.get("/redirection/:id", service.redirection);
 
-//running server
   app.listen(Port, () => {
-   console.log(`Server is stated on http://localhost:${Port}`);
+    console.log(`Server is stated on http://localhost:${Port}`);
   });
-}();
+}
+
+connect();
