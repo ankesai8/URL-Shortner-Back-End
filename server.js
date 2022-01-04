@@ -23,7 +23,7 @@ async function connect() {
 
 //get all urls
 
-  app.get("/urls", async (req, res) => {
+  app.get("/allurls", async (req, res) => {
     const all = await db.url.find().toArray();
     res.send(all);
   });
