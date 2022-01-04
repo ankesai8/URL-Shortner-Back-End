@@ -8,7 +8,7 @@ const userRoutes = require("./user_routes");
 const jwt = require("jsonwebtoken");
 const service = require("./modules/reset_service");
 
-async function connection() {
+async function() {
 //connecting to database
   await db.connect();
 
@@ -20,8 +20,7 @@ async function connection() {
   app.use("/user", userRoutes);
 
 //get all the created urls list
-  app.get("/getUrls", async (req, res) => {
-    const all = await db.url.find().toArray();
+  app.get("/allUrls", async (req, res) => { const all = await db.url.find().toArray();
     res.send(all);
   });
 
@@ -32,19 +31,12 @@ async function connection() {
   app.post("/new_password", service.newpassword);
 
 //middleware calling with the provided login token
-  app.use((req, res, next) => {
-    const token = req.headers["auth-token"];
+  app.use((req, res, next) => { const token = req.headers["auth-token"];
     if (token) {
-      try {
-        req.user = jwt.verify(token, "admin123");
-        console.log(req.user);
-        next();
-      } catch (err) {
-        res.sendStatus(500);
-      }
-    } else {
-      res.sendStatus(401);
-    }
+           req.user = jwt.verify(token, "admin123");
+           console.log(req.user);
+           next();} 
+ else { res.sendStatus(401); }
   });
 
 //route for generating a new url
@@ -57,6 +49,4 @@ async function connection() {
   app.listen(Port, () => {
    console.log(`Server is stated on http://localhost:${Port}`);
   });
-}
-
-connection();
+}();
