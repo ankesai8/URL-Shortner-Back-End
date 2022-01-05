@@ -86,7 +86,7 @@ const services = {
             //else generate a new url and send to the database
             const shortUrl = shortid.generate()
             const data = await db.url.insertOne({url:req.body.url , shortUrl : shortUrl})  
-            res.send(`https://url-shortner-888.netlify.app/${shortUrl}`)
+            res.send(`https://url-shortner-888.netlify.app/redirection/${shortUrl}`)
         }   
     },
 
