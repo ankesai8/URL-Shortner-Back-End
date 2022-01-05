@@ -8,20 +8,17 @@ const services ={
         try{
             //find whether any other user exists with the same email id or not 
             const user = await db.data.findOne({email : req.body.email})
-            if(user){
-               return  res.send({message :"User Already exists"})
-            }else{
+        if(user) {return  res.send({message :"User Already exists"})}
+        else     
+                {
                 //not than inset the information of new user to the database
                 const salt = await bcrypt.genSalt()
                 req.body.password = await bcrypt.hash(req.body.password , salt)
                 await db.data.insertOne(req.body)
                 return res.send({message :"Registered successfully"})
-            }
-        }catch(error){
-            res.status(500).send("something went wrong")
-        }
-      
-    },
+               }
+         }
+         catch(error){res.status(500).send("something went wrong")} },
 
     //checking for log in
     async login (req , res){
