@@ -9,7 +9,7 @@ const db = require("./mongo");
 const userRoutes = require("./user_routes");
 const service = require("./modules/reset_service");
 
-const Port = process.env.PORT || 5000;
+const Port = process.env.PORT || 9999;
 
 async function connect() {
 //connecting to database
